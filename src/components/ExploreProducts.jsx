@@ -13,7 +13,7 @@ const ExploreProducts = ({ allProducts }) => {
       <h2 className="text-4xl font-bold text-neutral-800">Explore Our Products</h2>
       <div className="grid grid-cols-4 gap-6 mt-8">
         {
-          products.map(product => (
+          products.slice(0, 10).map(product => (
             <ProductCard key={product._id} product={product}></ProductCard>
           ))
         }

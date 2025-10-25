@@ -18,14 +18,24 @@ const AllProducts = () => {
       .then(data => {
         console.log('after delete', data);
         if (data.success) {
-          const remaining = products.filter(p => p._id !== id);
-          setProducts(remaining);
           Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Product Deleted Successfully!",
-            showConfirmButton: false,
-            timer: 1000
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              const remaining = products.filter(p => p._id !== id);
+              setProducts(remaining);
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your Product has been deleted.",
+                icon: "success"
+              });
+            }
           });
         }
       })

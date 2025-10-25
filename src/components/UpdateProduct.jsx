@@ -1,47 +1,61 @@
-import React from 'react';
-import { IoBagAdd } from 'react-icons/io5';
-import { useLoaderData } from 'react-router';
-import Swal from 'sweetalert2';
+import { useEffect, useState } from "react";
+import { IoBagAdd } from "react-icons/io5";
+import { useLoaderData, useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
-const AddProduct = () => {
-  const brands = useLoaderData();
-  const handleAddProduct = e => {
+
+const UpdateProduct = () => {
+  const navigate = useNavigate();
+  const [brands, setBrands] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:3000/brands")
+      .then(res => res.json())
+      .then(data => {
+        setBrands(data);
+      })
+  }, []);
+
+  const { product } = useLoaderData();
+  const { _id, productName, image, rating, type, price, brandName, description } = product;
+
+  const handleUpdate = e => {
     e.preventDefault();
 
     const form = e.target;
     const formData = new FormData(form);
-    const newProduct = Object.fromEntries(formData.entries());
+    const updatedProduct = Object.fromEntries(formData.entries());
+    console.log(updatedProduct);
 
-    console.log(newProduct);
-
-    fetch(`http://localhost:3000/addProduct`, {
-      method: "POST",
+    fetch(`http://localhost:3000/product/${_id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(newProduct)
+      body: JSON.stringify(updatedProduct)
     })
       .then(res => res.json())
       .then(data => {
-        console.log('after post data: ', data);
+        console.log("after update", data);
         if (data.success) {
           Swal.fire({
-            title: "Product added successfully!",
+            position: "center",
             icon: "success",
-            draggable: true
+            title: "Product updated successfully",
+            showConfirmButton: false,
+            timer: 1000
           });
+          navigate(-1);
         }
       })
-
   }
   return (
     <section className='my-6 w-11/12 mx-auto border border-gray-200 rounded-2xl p-4 shadow'>
       <div className='flex items-center gap-2 justify-center text-3xl font-bold mb-4'>
         <span className='text-white bg-primary p-2 rounded-full flex items-center justify-center'><IoBagAdd /></span>
-        <h2 className=''>Add your product</h2>
+        <h2 className=''>Update product</h2>
       </div>
 
-      <form onSubmit={handleAddProduct}>
+      <form onSubmit={handleUpdate}>
         <div className='grid grid-cols-12 gap-8'>
           {/* name */}
           <div className="col-span-6">
@@ -49,6 +63,7 @@ const AddProduct = () => {
             <input
               type="text"
               name="productName"
+              defaultValue={productName}
               className="input bg-base-100 border border-neutral-200 outline-none w-full"
               placeholder="Name"
               required
@@ -61,6 +76,7 @@ const AddProduct = () => {
             <input
               type="text"
               name="image"
+              defaultValue={image}
               className="input bg-base-100 border border-neutral-200 outline-none w-full"
               placeholder="Enter image URL"
               required
@@ -72,10 +88,15 @@ const AddProduct = () => {
             <label className="label mb-1 text-neutral-900 font-semibold">Brand Name:</label>
             <select
               name="brandName"
-              className="select bg-base-100 border border-neutral-200 outline-none w-full">
+              defaultValue={brandName}
+              className="select border border-neutral-200 outline-none w-full"
+              required
+            >
               <option disabled value="">Select Brand</option>
-              {brands.map(brand => (
-                <option value={brand.brandName}>{brand.brandName}</option>
+              {brands.map((brand) => (
+                <option key={brand._id} value={brand.brandName}>
+                  {brand.brandName}
+                </option>
               ))}
             </select>
           </div>
@@ -86,6 +107,7 @@ const AddProduct = () => {
             <input
               type="text"
               name="type"
+              defaultValue={type}
               className="input bg-base-100 border border-neutral-200 outline-none w-full"
               placeholder="Enter Type"
               required
@@ -98,6 +120,7 @@ const AddProduct = () => {
             <input
               type="text"
               name="price"
+              defaultValue={price}
               className="input bg-base-100 border border-neutral-200 outline-none w-full"
               placeholder="Enter price"
               required
@@ -110,6 +133,7 @@ const AddProduct = () => {
             <input
               type="text"
               name="rating"
+              defaultValue={rating}
               className="input bg-base-100 border border-neutral-200 outline-none w-full"
               placeholder="Enter rating"
               required
@@ -122,6 +146,7 @@ const AddProduct = () => {
             <textarea
               type="text"
               name="description"
+              defaultValue={description}
               rows="30"
               className="input bg-base-100 border border-neutral-200 outline-none w-full h-24 p-3"
               placeholder="Enter description"
@@ -130,7 +155,7 @@ const AddProduct = () => {
 
           </div>
           <div className='col-span-12'>
-            <button type='submit' className='btn btn-primary w-full'>Add Product</button>
+            <button type='submit' className='btn btn-primary w-full'>Update Product</button>
           </div>
         </div>
 
@@ -140,4 +165,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default UpdateProduct;

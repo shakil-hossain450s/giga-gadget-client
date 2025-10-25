@@ -20,7 +20,7 @@ const ProductCardEdit = ({ product, handleDelete }) => {
         </p>
 
         <div className='flex justify-between'>
-          <h2 className="card-title">{productName.length > 10 ? productName.slice(0, 10) : productName}</h2>
+          <h2 className="card-title">{productName.length > 10 ? productName.slice(0, 10) + "..." : productName}</h2>
           <span className='badge badge-success text-white'>In Stock</span>
         </div>
         <p className='text-neutral-500'>Type: {type}</p>
@@ -33,7 +33,7 @@ const ProductCardEdit = ({ product, handleDelete }) => {
               <FaEye />
             </button>
           </Link>
-          <Link className="w-full card-actions mt-3">
+          <Link to={`/updateProduct/${_id}`} className="w-full card-actions mt-3">
             <button className="btn btn-sm border-0 shadow-none w-full  bg-primary text-sm text-white font-medium rounded">
               <FaEdit />
             </button>
