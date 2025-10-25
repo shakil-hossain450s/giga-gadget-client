@@ -4,15 +4,18 @@ import BrandCategory from '../components/BrandCategory';
 import ExploreProducts from '../components/ExploreProducts';
 import HeaderInfo from '../components/HeaderInfo';
 import { BiCategory } from 'react-icons/bi';
+import { useLoaderData } from 'react-router';
 
 const brandsPromise = fetch("http://localhost:3000/brands").then(res => res.json());
 
 const Home = () => {
+  const allProducts = useLoaderData();
+
   return (
     <section className="w-11/12 mx-auto my-20">
       <Hero></Hero>
       <div>
-        <div className="w-11/12 mx-auto my-20">
+        <div className="my-20">
           <HeaderInfo iconName={<BiCategory />} info={"Top Brands"}></HeaderInfo>
           <h2 className="text-4xl font-bold text-neutral-800">Browse by Brands</h2>
         </div>
@@ -22,7 +25,7 @@ const Home = () => {
           </Suspense>
         </div>
       </div>
-      <ExploreProducts></ExploreProducts>
+      <ExploreProducts allProducts={allProducts}></ExploreProducts>
     </section>
   );
 };
