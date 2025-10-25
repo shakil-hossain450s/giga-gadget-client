@@ -6,7 +6,7 @@ import HeaderInfo from "./HeaderInfo";
 
 const Hero = () => {
   return (
-    <div className="bg-[#FCEAE1]">
+    <div className="bg-[#FCEAE1] rounded-xl">
       <div className=" w-11/12 mx-auto flex justify-center items-center gap-10  h-[600px]">
         <div className="w-1/2">
           <HeaderInfo iconName={<FaFire />} info={"Top Brands"}></HeaderInfo>
