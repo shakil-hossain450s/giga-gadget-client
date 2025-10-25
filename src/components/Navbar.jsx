@@ -55,23 +55,17 @@ const Navbar = () => {
             }
           </ul>
         </div>
-        <div className="navbar-end">
-          {
-            location.pathname === "/login" && <>
-              <Link to="/register">
-                <PrimaryBtn>
-                  Register
-                </PrimaryBtn>
-              </Link>
-            </>
-          }
-          {(location.pathname === "/" || location.pathname === "/register") && <>
-            <Link to="/login">
-              <PrimaryBtn>
-                Login
-              </PrimaryBtn>
-            </Link>
-          </>}
+        <div className="navbar-end gap-4">
+          <Link to="/register">
+            <PrimaryBtn>
+              Register
+            </PrimaryBtn>
+          </Link>
+          <Link to="/login">
+            <PrimaryBtn>
+              Login
+            </PrimaryBtn>
+          </Link>
         </div>
       </div>
     </div>

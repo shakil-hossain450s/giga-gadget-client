@@ -14,18 +14,17 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        loader: () =>
-          fetch("http://localhost:3000/products"),
+        loader: () => fetch("http://localhost:3000/products"),
         Component: Home
       },
       {
         path: "allProducts",
+        loader: () => fetch("http://localhost:3000/products"),
         Component: AllProducts
       },
       {
         path: "addProduct",
-        loader: () =>
-          fetch("http://localhost:3000/brands"),
+        loader: () => fetch("http://localhost:3000/brands"),
         Component: AddProduct
       },
       {

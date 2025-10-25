@@ -1,14 +1,20 @@
-import { FaFacebook, FaHeart, FaTwitter } from "react-icons/fa";
+import { FaArrowLeft, FaFacebook, FaHeart, FaTwitter } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
-import { useLoaderData } from "react-router";
+import { Link, useLoaderData, useNavigate } from "react-router";
 
 const ProductDetails = () => {
+  const navigate = useNavigate();
   const { product } = useLoaderData();
   console.log(product);
   const { _id, productName, image, rating, type, price, brandName, description } = product;
 
   return (
-    <section className="w-11/12 mx-auto my-20">
+    <section className="w-11/12 mx-auto my-4">
+      <Link onClick={() => navigate(-1)}>
+        <button className='btn btn-outline border border-primary p-3 rounded-full text-primary mb-6 hover:bg-primary hover:text-white'>
+          <FaArrowLeft />
+        </button>
+      </Link>
       <div className="grid grid-cols-12 gap-8 items-center">
         <div className="col-span-6 border border-gray-300 rounded shadow">
           <img src={image} alt={productName} />
