@@ -1,11 +1,40 @@
-
-import { useState } from 'react';
-import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useContext, useState } from 'react';
+import { FaArrowLeft, FaEye, FaEyeSlash, FaGithub, FaGoogle } from 'react-icons/fa';
 import { Link } from 'react-router';
+import AuthContext from '../Contexts/AuthContext';
 
 const Register = () => {
+  const { createAccount } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
+  const handleRegister = e => {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const { name, photoUrl, email, password } = Object.fromEntries(formData.entries());
+    const terms = form.terms.checked;
+
+    if (!terms) {
+      return setErrorMessage("Plase accept terms & conditions.")
+    }
+
+    setErrorMessage("");
+
+    console.log(name, photoUrl, email, password, terms);
+
+    createAccount(email, password)
+      .then(result => {
+        console.log(result);
+        setSuccessMessage("User created Successfully");
+      })
+      .catch(err => {
+        console.log(err);
+      })
+
+  }
 
 
   return (
@@ -17,18 +46,30 @@ const Register = () => {
         </button>
       </Link>
       <div className='flex justify-center items-center min-h-[80vh]'>
-        <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl p-6">
+        <div className="card bg-base-100 w-full max-w-lg shrink-0 shadow-2xl p-6">
           <h2 className='text-primary text-2xl font-bold text-center pt-4'>Register your account</h2>
           <div className='border-b border-base-200 mt-6'></div>
           <div className="card-body">
-            <form className="fieldset">
+
+            <div className="flex gap-6 items-center justify-around">
+              <button className='flex gap-2 items-center btn bg-indigo-100 shadow-none border-none'>
+                <span className='bg-white p-2 rounded-full'><FaGoogle /></span>
+                <span>Sign in With Google</span>
+              </button>
+              <button className='flex gap-2 items-center btn bg-indigo-100 shadow-none border-none'>
+                <span className='bg-white p-2 rounded-full'><FaGithub /></span>
+                <span>Sign in With Github</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleRegister} className="fieldset">
 
               {/* name */}
               <label className="label">Name</label>
               <input
                 type="text"
                 name="name"
-                className="input bg-base-200 border-0 outline-none"
+                className="input bg-base-200 border-0 w-full outline-none"
                 placeholder="Enter your name"
                 required
               />
@@ -38,7 +79,7 @@ const Register = () => {
               <input
                 type="text"
                 name="photoUrl"
-                className="input bg-base-200 border-0 outline-none"
+                className="input bg-base-200 border-0 w-full outline-none"
                 placeholder="Photo URL"
                 required
               />
@@ -47,14 +88,14 @@ const Register = () => {
               <input
                 type="email"
                 name="email"
-                className="input bg-base-200 border-0 outline-none"
+                className="input bg-base-200 border-0 w-full outline-none"
                 placeholder="Enter your email"
                 required
               />
 
               {/* password */}
               <label className="label">Password</label>
-              <div className='input bg-base-200 border-0 outline-none'>
+              <div className='input bg-base-200 border-0 w-full outline-none'>
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
@@ -78,6 +119,8 @@ const Register = () => {
               </p>
 
               {/* error message */}
+              {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+              {successMessage && <p className="text-green-500">{successMessage}</p>}
 
               {/* register button */}
               <button type='submit' className="btn btn-primary mt-4">Register</button>

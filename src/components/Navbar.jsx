@@ -1,11 +1,12 @@
-import React from 'react';
-import { Link, NavLink, useLocation } from 'react-router';
+
+import { Link, NavLink } from "react-router";
 import logoImage from "../assets/logo.png";
-import PrimaryBtn from './PrimaryBtn';
+import PrimaryBtn from "./PrimaryBtn";
+import { useContext } from "react";
+import AuthContext from "../Contexts/AuthContext";
 
 const Navbar = () => {
-  const location = useLocation();
-  console.log(location);
+  const { user, logoutUser } = useContext(AuthContext);
 
   const links = [
     { id: 1, path: "/", pathName: "Home" },
@@ -13,6 +14,16 @@ const Navbar = () => {
     { id: 2, path: "/addProduct", pathName: "Add Product" },
     { id: 3, path: "/myCart", pathName: "My Cart" },
   ];
+
+  const handleLogout = () => {
+    logoutUser()
+      .then(() => {
+        console.log("Log out successfull");
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
 
   return (
     <div className="bg-base-100 shadow-sm">
@@ -56,16 +67,27 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="navbar-end gap-4">
-          <Link to="/register">
-            <PrimaryBtn>
-              Register
-            </PrimaryBtn>
-          </Link>
-          <Link to="/login">
-            <PrimaryBtn>
-              Login
-            </PrimaryBtn>
-          </Link>
+          {
+            user ?
+              <button onClick={() => handleLogout()}
+                className="btn bg-primary text-white"
+              >
+                Logout
+              </button>
+              :
+              <>
+                <Link to="/register">
+                  <PrimaryBtn>
+                    Register
+                  </PrimaryBtn>
+                </Link>
+                <Link to="/login">
+                  <PrimaryBtn>
+                    Login
+                  </PrimaryBtn>
+                </Link>
+              </>
+          }
         </div>
       </div>
     </div>
