@@ -71,12 +71,25 @@ const Navbar = () => {
           {
             user ?
               <>
-                <p>{user.email}</p>
-                <button onClick={() => handleLogout()}
-                  className="btn bg-primary text-white"
-                >
-                  Logout
-                </button>
+                <div className="dropdown dropdown-end">
+                  <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                    <div className="w-10 rounded-full">
+                      <img
+                        alt="profile"
+                        src={user.photoURL} />
+                    </div>
+                  </div>
+                  <ul
+                    tabIndex="-1"
+                    className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-40 p-4 shadow space-y-3">
+                    <p className="text-xl text-center font-bold">{user.displayName}</p>
+                    <button onClick={() => handleLogout()}
+                      className="btn bg-primary text-white"
+                    >
+                      Logout
+                    </button>
+                  </ul>
+                </div>
               </>
               :
               <>

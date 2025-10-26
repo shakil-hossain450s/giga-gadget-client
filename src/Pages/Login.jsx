@@ -1,13 +1,19 @@
-
 import { useContext, useState } from 'react';
 import { FaArrowLeft, FaEye, FaEyeSlash, FaGithub, FaGoogle } from 'react-icons/fa';
-import { Link } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import AuthContext from '../Contexts/AuthContext';
+import Swal from 'sweetalert2';
+import { GoogleAuthProvider } from 'firebase/auth';
 
 const Login = () => {
-  const { loginUser } = useContext(AuthContext);
-
+  const { loginUser, googleProviderLogin } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
+
+  const googleProvider = new GoogleAuthProvider();
 
   const handlelLogin = e => {
     e.preventDefault();
@@ -20,9 +26,35 @@ const Login = () => {
     loginUser(email, password)
       .then(result => {
         console.log(result);
+        if (result.user) {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Logged in Successfully",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          navigate(from, { replace: true });
+        }
       })
       .catch(err => {
         console.log(err);
+      })
+  }
+
+  const handleGoogleLogin = () => {
+    googleProviderLogin(googleProvider)
+      .then(result => {
+        if (result.user) {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Logged in Successfully",
+            showConfirmButton: false,
+            timer: 1000
+          });
+          navigate(from, { replace: true });
+        }
       })
   }
 
@@ -41,7 +73,7 @@ const Login = () => {
           <div className="card-body">
 
             <div className="flex gap-6 items-center justify-around">
-              <button className='flex gap-2 items-center btn bg-indigo-100 shadow-none border-none'>
+              <button onClick={handleGoogleLogin} className='flex gap-2 items-center btn bg-indigo-100 shadow-none border-none'>
                 <span className='bg-white p-2 rounded-full'><FaGoogle /></span>
                 <span>Sign in With Google</span>
               </button>

@@ -1,14 +1,19 @@
 import { useContext, useState } from 'react';
 import { FaArrowLeft, FaEye, FaEyeSlash, FaGithub, FaGoogle } from 'react-icons/fa';
-import { Link } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import AuthContext from '../Contexts/AuthContext';
 import { GoogleAuthProvider } from 'firebase/auth';
+import Swal from 'sweetalert2';
 
 const Register = () => {
-  const { createAccount, googleProviderLogin } = useContext(AuthContext);
+  const { createAccount, googleProviderLogin, updateUser } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   const googleProvider = new GoogleAuthProvider();
 
@@ -28,10 +33,31 @@ const Register = () => {
 
     console.log(name, photoUrl, email, password, terms);
 
+    const userDetails = {
+      displayName: name,
+      photoURL: photoUrl,
+    }
+
     createAccount(email, password)
       .then(result => {
         console.log(result);
         setSuccessMessage("User created Successfully");
+        if (result.user) {
+          updateUser(userDetails)
+            .then(() => {
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Registration Successfull",
+                showConfirmButton: false,
+                timer: 1000
+              });
+              navigate(from, { replace: true }); // go back or go home
+            })
+            .catch(err => {
+              console.log(err);
+            })
+        }
       })
       .catch(err => {
         console.log(err);
@@ -43,6 +69,16 @@ const Register = () => {
     googleProviderLogin(googleProvider)
       .then(result => {
         console.log(result);
+        if (result.user) {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Registration Successfull",
+            showConfirmButton: false,
+            timer: 1000
+          });
+          navigate(from, {replace: true}); // go back or go home
+        }
       })
       .catch(err => {
         console.log(err);
