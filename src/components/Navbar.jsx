@@ -7,6 +7,7 @@ import AuthContext from "../Contexts/AuthContext";
 
 const Navbar = () => {
   const { user, logoutUser } = useContext(AuthContext);
+  console.log(user);
 
   const links = [
     { id: 1, path: "/", pathName: "Home" },
@@ -69,11 +70,14 @@ const Navbar = () => {
         <div className="navbar-end gap-4">
           {
             user ?
-              <button onClick={() => handleLogout()}
-                className="btn bg-primary text-white"
-              >
-                Logout
-              </button>
+              <>
+                <p>{user.email}</p>
+                <button onClick={() => handleLogout()}
+                  className="btn bg-primary text-white"
+                >
+                  Logout
+                </button>
+              </>
               :
               <>
                 <Link to="/register">

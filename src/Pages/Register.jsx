@@ -2,12 +2,15 @@ import { useContext, useState } from 'react';
 import { FaArrowLeft, FaEye, FaEyeSlash, FaGithub, FaGoogle } from 'react-icons/fa';
 import { Link } from 'react-router';
 import AuthContext from '../Contexts/AuthContext';
+import { GoogleAuthProvider } from 'firebase/auth';
 
 const Register = () => {
-  const { createAccount } = useContext(AuthContext);
+  const { createAccount, googleProviderLogin } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const googleProvider = new GoogleAuthProvider();
 
   const handleRegister = e => {
     e.preventDefault();
@@ -36,6 +39,16 @@ const Register = () => {
 
   }
 
+  const handleGoogleLogin = () => {
+    googleProviderLogin(googleProvider)
+      .then(result => {
+        console.log(result);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
 
   return (
     <section className='my-6 w-11/12 mx-auto'>
@@ -52,7 +65,7 @@ const Register = () => {
           <div className="card-body">
 
             <div className="flex gap-6 items-center justify-around">
-              <button className='flex gap-2 items-center btn bg-indigo-100 shadow-none border-none'>
+              <button onClick={handleGoogleLogin} className='flex gap-2 items-center btn bg-indigo-100 shadow-none border-none'>
                 <span className='bg-white p-2 rounded-full'><FaGoogle /></span>
                 <span>Sign in With Google</span>
               </button>
